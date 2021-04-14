@@ -13,10 +13,56 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+ 
+        guard let windowScene = scene as? UIWindowScene
+        else {return}
+        
+        /*window = UIWindow(windowScene: windowScene)
+        let vc = LoginViewController()
+        window!.rootViewController = vc
+        window?.makeKeyAndVisible()*/
+        
+        startTabBarController(in: windowScene)
+    }
+    
+    private func startTabBarController(in windowScene: UIWindowScene) {
+        window = UIWindow(windowScene: windowScene)
+        window?.rootViewController = createTabBarViewController()
+        window?.makeKeyAndVisible()
+    }
+    
+    
+    private func createTabBarViewController() -> UIViewController {
+        let vc = UITabBarController()
+        
+        vc.tabBar.tintColor = .purple
+        vc.tabBar.barTintColor = .white
+        
+        let quizImage = UIImage(systemName: "stopwatch")!
+        
+        let search = UIImage(systemName: "magnifyingglass")
+        
+        let gear = UIImage(systemName: "gearshape.fill")
+        
+        let mn = QuizzesViewController()
+        mn.tabBarItem = UITabBarItem(title: "Quiz",
+                                     image: quizImage,
+                                     selectedImage: quizImage)
+        
+        
+        let dm1 = DummyViewController2()
+        dm1.tabBarItem = UITabBarItem(title: "Search",
+                                      image: search,
+                                      selectedImage: search)
+        
+        let dm2 = DummyViewController1()
+        dm2.tabBarItem = UITabBarItem(title: "Settings",
+                                      image: gear,
+                                      selectedImage: gear)
+        
+        vc.viewControllers = [mn, dm1, dm2]
+        
+        return vc
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -50,3 +96,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 
+
+class DummyViewController1:UIViewController{
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .purple
+    }
+}
+
+class DummyViewController2:UIViewController{
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .blue
+    }
+}
