@@ -8,19 +8,18 @@
 import Foundation
 import UIKit
 
-class TableViewCell: UITableViewCell{
+class QuizCell: UITableViewCell{
     
-    var quizImageView: UIImageView!
-    var quizTitle: UILabel!
-    var quizDescription: UILabel!
-    var levelImage: UIImageView!
-    var levelImage1: UIImageView!
-    var levelImage2: UIImageView!
-    var paddedView: UIView!
+    private var quizImageView: UIImageView!
+    private var quizTitle: UILabel!
+    private var quizDescription: UILabel!
+    private var levelImage: UIImageView!
+    private var levelImage1: UIImageView!
+    private var levelImage2: UIImageView!
+    private var paddedView: UIView!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?){
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         buildViews()
         addConstraints()
     }

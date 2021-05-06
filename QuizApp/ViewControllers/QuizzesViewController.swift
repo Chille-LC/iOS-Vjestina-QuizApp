@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import UIKit
 import SnapKit
+import UIKit
+
 
 class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
@@ -27,9 +28,9 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
     private var labelFunFact: UILabel!
     private var labelFact: UILabel!
     
-    var tableView = UITableView()
-    var quizzes: [Quiz] = []
-    var sectionedQuizzes = [[Quiz]]()
+    private var tableView = UITableView()
+    private var quizzes: [Quiz] = []
+    private var sectionedQuizzes = [[Quiz]]()
     
     struct Cells {
         static let cellID = "quizCell"
@@ -40,6 +41,12 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         buildViews()
         addConstraints()
+        configurTableView()
+        
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
        
         quizzes = DatServ.fetchQuizes()
         let sportsQuizzes = quizzes.filter({ $0.category.rawValue == "SPORTS"})
@@ -70,7 +77,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         getButton = RoundButton()
         getButton.setTitle("Get Quiz", for: .normal)
-        getButton.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+        getButton.backgroundColor = .white
         getButton.clipsToBounds = true
         getButton.titleLabel?.font = UIFont(name: "SourceSansPro-Black", size: 20)
         getButton.setTitleColor(UIColor(red: 0.39, green: 0.16, blue: 0.87, alpha: 1), for: .normal)
@@ -105,7 +112,8 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         funScreen = UIView()
         funScreen.translatesAutoresizingMaskIntoConstraints = false
         
-        //let noOfNBA = quizzes.map(<#T##transform: (Quiz) throws -> T##(Quiz) throws -> T#>)
+        let noOfNBA = quizzes.flatMap({$0.questions}).filter({$0.question.contains("NBA")}).count
+        
         labelFunFact = UILabel()
         labelFunFact.text = "💡Fun Fact"
         labelFunFact.font = UIFont(name: "SourceSansPro-SemiBold", size: 30)
@@ -114,7 +122,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         labelFunFact.translatesAutoresizingMaskIntoConstraints = false
         
         labelFact = UILabel()
-        labelFact.text = "There are 48 questions that contain the word “NBA"
+        labelFact.text = "There are" + " \(noOfNBA) " + "questions that contain the word \"NBA\" "
         labelFact.numberOfLines = 2
         labelFact.textColor = .white
         labelFact.font = UIFont(name: "SourceSansPro-Light", size: 22)
@@ -125,8 +133,8 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         funScreen.addSubview(labelFunFact)
         funScreen.addSubview(labelFact)
         funScreen.isHidden = true
-        
-        view.layer.addSublayer(layerGradient)
+                        
+        view.layer.insertSublayer(layerGradient, at: 0)
         view.addSubview(appName)
         view.addSubview(getButton)
         view.addSubview(errorScreen)
@@ -140,7 +148,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
             make.centerX.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(0.5)
             make.height.equalToSuperview().multipliedBy(0.07)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(40)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
         }
         
         getButton.snp.makeConstraints{make -> Void in
@@ -199,6 +207,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func configurTableView(){
+        tableView.isHidden = true
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
@@ -207,7 +216,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(TableViewCell.self, forCellReuseIdentifier: Cells.cellID)
+        tableView.register(QuizCell.self, forCellReuseIdentifier: Cells.cellID)
         
         tableView.snp.makeConstraints{make -> Void in
             make.bottom.equalToSuperview().offset(10)
@@ -253,19 +262,46 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         return label    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Cells.cellID) as! TableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Cells.cellID) as! QuizCell
         let quiz = sectionedQuizzes[indexPath.section][indexPath.row]
         
         cell.set(quiz: quiz)
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! QuizCell
+        let quiz = cell.getQuiz()
+        let newQuizPage = QuizPageViewController()
+        var controllers: [QuizViewController] = []
+        var index = 1
+        
+        for question in quiz.questions {
+            let qNumber = "\(index) of \(quiz.questions.count)"
+            let vc = QuizViewController(answerList: question.answers, quesText: question.question, questNoText: qNumber, correctAnswerIndex: question.correctAnswer)
+            
+            index += 1
+            controllers.append(vc)
+        }
+        
+        newQuizPage.setControllers(controllerArray: controllers)
+        self.navigationController?.pushViewController(newQuizPage, animated: true)
+        
+    }
+    
     @objc func getButtonIsPressed(){
         errorScreen.isHidden = true
         funScreen.isHidden = false
-        configurTableView()
+        tableView.isHidden = false
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        layerGradient.frame = view.bounds
+    }
+    
 }
+
 
 
 
