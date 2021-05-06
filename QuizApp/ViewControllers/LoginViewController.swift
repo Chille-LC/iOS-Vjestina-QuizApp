@@ -16,12 +16,16 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
     private var appName: UILabel!
     private var loginButton: RoundButton!
     private var layerGradient: CAGradientLayer!
-    
     private var DataSInstance = DataService()
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        
         buildViews()
         addConstraints()
         
@@ -35,9 +39,7 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
     
     
     private func buildViews(){
-        
-        //view.backgroundColor = UIColor(red: 0.45, green: 0.31, blue: 0.64, alpha: 1)
-        
+                
         layerGradient = CAGradientLayer()
         layerGradient.frame = view.bounds
         layerGradient.colors = [UIColor(red: 0.45, green: 0.31, blue: 0.64, alpha: 1).cgColor,
@@ -57,10 +59,10 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
         passwordField.translatesAutoresizingMaskIntoConstraints = false
         passwordField.textAlignment = .left
         passwordField.font = UIFont(name: "SourceSansPro-Black", size: 15)
-        passwordField.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
-        passwordField.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3)
+        passwordField.textColor = .white
+        passwordField.backgroundColor = .white.withAlphaComponent(0.3)
         passwordField.attributedPlaceholder = NSAttributedString(string: "Password",
-                    attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0.6),
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.white.withAlphaComponent(0.6),
                                  NSAttributedString.Key.font: UIFont(name: "SourceSansPro-Light", size: 20)!])
         
         
@@ -69,23 +71,23 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
         emailField.textAlignment = .left
         emailField.translatesAutoresizingMaskIntoConstraints = false
         emailField.font = UIFont(name: "SourceSansPro-Black", size: 15)
-        emailField.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
-        emailField.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.3)
+        emailField.textColor = .white
+        emailField.backgroundColor = .white.withAlphaComponent(0.3)
         emailField.attributedPlaceholder = NSAttributedString(string: "Email",
-                   attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0.6),
+                   attributes: [NSAttributedString.Key.foregroundColor: UIColor.white.withAlphaComponent(0.6),
                                NSAttributedString.Key.font: UIFont(name: "SourceSansPro-Light", size: 20)!])
 
         
         loginButton = RoundButton()
         loginButton.setTitle("Login", for: .normal)
         loginButton.translatesAutoresizingMaskIntoConstraints = false
-        loginButton.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.55)
+        loginButton.backgroundColor = .white.withAlphaComponent(0.55)
         loginButton.titleLabel?.font = UIFont(name: "SourceSansPro-Black", size: 20)
         loginButton.setTitleColor(UIColor(red: 0.39, green: 0.16, blue: 0.87, alpha: 1), for: .normal)
         loginButton.setTitleColor(UIColor(red: 0.39, green: 0.16, blue: 0.87, alpha: 0.8), for: .disabled)
         loginButton.isEnabled = false
         
-        view.layer.addSublayer(layerGradient)
+        view.layer.insertSublayer(layerGradient, at: 0)
         view.addSubview(appName)
         view.addSubview(passwordField)
         view.addSubview(emailField)
@@ -97,7 +99,7 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
             make.centerX.equalToSuperview()
             make.width.equalToSuperview().multipliedBy(0.5)
             make.height.equalToSuperview().multipliedBy(0.07)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(40)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
         }
         
         passwordField.snp.makeConstraints{ make -> Void in
@@ -122,36 +124,39 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
     
     
     
-    @objc func editingChanged(_ textField: UITextField) {
+    @objc func editingChanged(_ textField: UITextField){
         
-        textField.text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        loginButton.isEnabled = ![emailField, passwordField].compactMap {
-            $0.text?.isEmpty
-        }.contains(true)
-        
-        if loginButton.isEnabled {
+        if (emailField.text != "" && passwordField.text != ""){
+            loginButton.isEnabled = true
             loginButton.backgroundColor = .white
+        }
+        else{
+            loginButton.isEnabled = false
+            loginButton.backgroundColor = .white.withAlphaComponent(0.55)
         }
     }
     
     
     @objc func loginButtonPressed(){
+        
         let status = DataSInstance.login(email: emailField.text!, password: passwordField.text!)
         
         if case .success = status{
-            self.present(QuizzesViewController(), animated: true, completion: nil)
+            let vc = createTabBarViewController()
+            self.navigationController?.setViewControllers([vc], animated: true)
         }
     }
     
     
     @objc func fieldIsActive(_ textField: UITextField){
+        
         passwordField.layer.borderWidth = 1
         passwordField.layer.borderColor = UIColor.white.cgColor
     }
     
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    func textFieldDidBeginEditing(_ textField: UITextField){
+        
         if textField == emailField{
             emailField.layer.borderColor = UIColor.white.cgColor
             emailField.layer.borderWidth = 1
@@ -162,7 +167,8 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
         }
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField){
+        
         if textField == emailField{
             emailField.layer.borderWidth = 0
         }
@@ -170,5 +176,12 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
             passwordField.layer.borderWidth = 0
         }
     }
+    
+    override func viewDidLayoutSubviews(){
+        
+        super.viewDidLayoutSubviews()
+        layerGradient.frame = view.bounds
+    }
+    
 }
 

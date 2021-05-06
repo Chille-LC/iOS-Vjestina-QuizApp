@@ -31,6 +31,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
     private var tableView = UITableView()
     private var quizzes: [Quiz] = []
     private var sectionedQuizzes = [[Quiz]]()
+    private var noOfNBA = 0
     
     struct Cells {
         static let cellID = "quizCell"
@@ -38,6 +39,9 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
    
     
     override func viewDidLoad() {
+        quizzes = DatServ.fetchQuizes()
+        noOfNBA = quizzes.flatMap({$0.questions}).filter({$0.question.contains("NBA")}).count
+
         super.viewDidLoad()
         buildViews()
         addConstraints()
@@ -48,7 +52,6 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
        
-        quizzes = DatServ.fetchQuizes()
         let sportsQuizzes = quizzes.filter({ $0.category.rawValue == "SPORTS"})
         let scienceQuizzes = quizzes.filter({ $0.category.rawValue == "SCIENCE"})
         
@@ -111,8 +114,6 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         funScreen = UIView()
         funScreen.translatesAutoresizingMaskIntoConstraints = false
-        
-        let noOfNBA = quizzes.flatMap({$0.questions}).filter({$0.question.contains("NBA")}).count
         
         labelFunFact = UILabel()
         labelFunFact.text = "💡Fun Fact"
@@ -238,6 +239,13 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         return sectionedQuizzes.count
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let selectedIndexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedIndexPath, animated: animated)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
        
         let label = UILabel()
@@ -278,10 +286,14 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         for question in quiz.questions {
             let qNumber = "\(index) of \(quiz.questions.count)"
-            let vc = QuizViewController(answerList: question.answers, quesText: question.question, questNoText: qNumber, correctAnswerIndex: question.correctAnswer)
+            let vc = QuizViewController(answerList: question.answers, quesText: question.question, questNoText: qNumber, correctAnswerIndex: question.correctAnswer, numberOfQuestions: quiz.questions.count)
             
             index += 1
             controllers.append(vc)
+        }
+        
+        for index in 0...controllers.count-1{
+            controllers[index].setProgress(index: index)
         }
         
         newQuizPage.setControllers(controllerArray: controllers)

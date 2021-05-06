@@ -17,6 +17,8 @@ class QuizCell: UITableViewCell{
     private var levelImage1: UIImageView!
     private var levelImage2: UIImageView!
     private var paddedView: UIView!
+    private var thisQuiz: Quiz!
+    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?){
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -29,7 +31,8 @@ class QuizCell: UITableViewCell{
     }
     
     func set(quiz: Quiz){
-        quizImageView.load(url: URL(string: quiz.imageUrl)!)
+        thisQuiz = quiz
+        quizImageView.load(url: quiz.imageUrl)
         quizTitle.text = quiz.title
         quizDescription.text = quiz.description
         let activeImage: UIImage!
@@ -140,12 +143,15 @@ class QuizCell: UITableViewCell{
         levelImage.topAnchor.constraint(equalTo: levelImage2.topAnchor).isActive = true
     }
     
-
+    func getQuiz() -> Quiz{
+        return thisQuiz
+    }
+    
 }
 
 extension UIImageView {
-    func load(url: URL) {
-        DispatchQueue.global().async { [weak self] in
+    func load(url: String) {
+        /*DispatchQueue.global().async { [weak self] in
             if let data = try? Data(contentsOf: url) {
                 if let image = UIImage(data: data) {
                     DispatchQueue.main.async {
@@ -153,6 +159,20 @@ extension UIImageView {
                     }
                 }
             }
-        }
+        }*/
+        
+        guard let imageURL = URL(string: url) else { return }
+
+                // just not to cause a deadlock in UI!
+            DispatchQueue.global().async {
+                guard let imageData = try? Data(contentsOf: imageURL) else { return }
+
+                let image = UIImage(data: imageData)
+                DispatchQueue.main.async {
+                    self.image = image
+                }
+            }
     }
 }
+
+

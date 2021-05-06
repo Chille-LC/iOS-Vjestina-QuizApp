@@ -32,7 +32,7 @@ func createTabBarViewController() -> UIViewController {
                                   image: search,
                                   selectedImage: search)
     
-    let dm2 = DummyViewController2()
+    let dm2 = SettingsViewController()
     dm2.tabBarItem = UITabBarItem(title: "Settings",
                                   image: gear,
                                   selectedImage: gear)
