@@ -19,7 +19,7 @@ class QuizViewController:UIViewController{
     private var questionNoLabel: UILabel!
     private var layerGradient: CAGradientLayer!
     private var appName:UILabel!
-    private var progressView: UIView!
+    private var questionTrackerView: UIView!
     
     private var progressArray: [UIView] = []
     private var questionNoText: String!
@@ -38,12 +38,12 @@ class QuizViewController:UIViewController{
         self.correctAnswer = answerList[correctAnswerIndex]
         super.init(nibName: nil, bundle: nil)
         
-        progressView = UIView()
+        questionTrackerView = UIView()
         
         for index in 0...numOfQuestions-1 {
             progressArray.append(UIView())
             progressArray[index].backgroundColor = .white.withAlphaComponent(0.5)
-            progressView.addSubview(progressArray[index])
+            questionTrackerView.addSubview(progressArray[index])
         }
     }
     
@@ -141,7 +141,7 @@ class QuizViewController:UIViewController{
         view.addSubview(button2)
         view.addSubview(button3)
         view.addSubview(button4)
-        view.addSubview(progressView)
+        view.addSubview(questionTrackerView)
 
 
     }
@@ -190,7 +190,7 @@ class QuizViewController:UIViewController{
             make.centerX.equalToSuperview()
         }
         
-        progressView.snp.makeConstraints{make -> Void in
+        questionTrackerView.snp.makeConstraints{make -> Void in
             make.centerX.equalToSuperview()
             make.height.equalTo(10)
             make.width.equalToSuperview().multipliedBy(0.8)
@@ -216,21 +216,6 @@ class QuizViewController:UIViewController{
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         layerGradient.frame = view.bounds
-    }
-    
-    func setQuestionText(text: String) {
-        questionLabel.text = text
-    }
-    
-    func setQuestionNo(text: String) {
-        questionNoLabel.text = text
-    }
-    
-    func setAnswers(text: [String]){
-        button1.setTitle(text[0], for: .normal)
-        button2.setTitle(text[1], for: .normal)
-        button3.setTitle(text[2], for: .normal)
-        button4.setTitle(text[3], for: .normal)
     }
     
     @objc func answerPressed(sender: UIButton){

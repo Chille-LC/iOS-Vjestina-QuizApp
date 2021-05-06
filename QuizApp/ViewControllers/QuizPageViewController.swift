@@ -56,6 +56,7 @@ extension QuizPageViewController: UIPageViewControllerDataSource{
         return controllers[displayedIndex]
     }
     
+    
     func goToNextPage(animated: Bool = true, completion: ((Bool) -> Void)? = nil, correct: Bool, index: Int) {
         
         if correct {
@@ -64,7 +65,6 @@ extension QuizPageViewController: UIPageViewControllerDataSource{
                 controllers[i].setResult(index: index, color: .green)
             }
         }
-        
         else{
             for i in 0...controllers.count-1{
                 controllers[i].setResult(index: index, color: .red)
@@ -75,6 +75,7 @@ extension QuizPageViewController: UIPageViewControllerDataSource{
             let vc = QuizFinishedViewController(text: "\(score)/\(controllers.count)")
             self.navigationController?.pushViewController(vc, animated: true)
         }
+        
         if (displayedIndex < controllers.count){
             if let currentViewController = controllers?[displayedIndex] {
                 if let nextPage = dataSource?.pageViewController(self, viewControllerAfter: currentViewController) {
