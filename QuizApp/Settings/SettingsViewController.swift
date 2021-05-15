@@ -28,8 +28,8 @@ class SettingsViewController: UIViewController, UITextFieldDelegate{
         
         layerGradient = CAGradientLayer()
         layerGradient.frame = view.bounds
-        layerGradient.colors = [UIColor(red: 0.45, green: 0.31, blue: 0.64, alpha: 1).cgColor,
-                                UIColor(red: 0.15, green: 0.18, blue: 0.46, alpha: 1).cgColor]
+        layerGradient.colors = [Colors.purple1.cgColor,
+                                Colors.darkBlue.cgColor]
         
         usernameStatement = UILabel()
         usernameStatement.text = "USERNAME"
@@ -50,7 +50,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate{
         logoutButton.setTitle("Log out", for: .normal)
         logoutButton.backgroundColor = .white
         logoutButton.titleLabel?.font = UIFont(name: "SourceSansPro-Black", size: 20)
-        logoutButton.setTitleColor(UIColor(red: 0.99, green: 0.40, blue: 0.40, alpha: 1.00), for: .normal)
+        logoutButton.setTitleColor(Colors.red1, for: .normal)
         
         view.layer.addSublayer(layerGradient)
         view.addSubview(logoutButton)

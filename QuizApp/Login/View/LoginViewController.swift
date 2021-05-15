@@ -16,9 +16,11 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
     private var appName: UILabel!
     private var loginButton: RoundButton!
     private var layerGradient: CAGradientLayer!
-    private var DataSInstance = DataService()
+    private var loginStatus: LoginStatus!
+    private var loginPresenter = LoginPresenter()
     
     override func viewDidLoad() {
+        
         
         super.viewDidLoad()
         
@@ -42,8 +44,8 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
                 
         layerGradient = CAGradientLayer()
         layerGradient.frame = view.bounds
-        layerGradient.colors = [UIColor(red: 0.45, green: 0.31, blue: 0.64, alpha: 1).cgColor,
-                                UIColor(red: 0.15, green: 0.18, blue: 0.46, alpha: 1).cgColor]
+        layerGradient.colors = [Colors.purple1.cgColor,
+                                Colors.darkBlue.cgColor]
         
         appName = UILabel()
         appName.textColor = .white
@@ -51,12 +53,10 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
         appName.font = UIFont(name: "SourceSansPro-Black", size: 38)
         appName.textAlignment = .center
         appName.adjustsFontSizeToFitWidth = true
-        appName.translatesAutoresizingMaskIntoConstraints = false
         
     
         passwordField = TextFieldWithPadding()
         passwordField.isSecureTextEntry = true
-        passwordField.translatesAutoresizingMaskIntoConstraints = false
         passwordField.textAlignment = .left
         passwordField.font = UIFont(name: "SourceSansPro-Black", size: 15)
         passwordField.textColor = .white
@@ -69,7 +69,6 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
         
         emailField = TextFieldWithPadding()
         emailField.textAlignment = .left
-        emailField.translatesAutoresizingMaskIntoConstraints = false
         emailField.font = UIFont(name: "SourceSansPro-Black", size: 15)
         emailField.textColor = .white
         emailField.backgroundColor = .white.withAlphaComponent(0.3)
@@ -80,7 +79,6 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
         
         loginButton = RoundButton()
         loginButton.setTitle("Login", for: .normal)
-        loginButton.translatesAutoresizingMaskIntoConstraints = false
         loginButton.backgroundColor = .white.withAlphaComponent(0.55)
         loginButton.titleLabel?.font = UIFont(name: "SourceSansPro-Black", size: 20)
         loginButton.setTitleColor(UIColor(red: 0.39, green: 0.16, blue: 0.87, alpha: 1), for: .normal)
@@ -138,13 +136,7 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
     
     
     @objc func loginButtonPressed(){
-        
-        let status = DataSInstance.login(email: emailField.text!, password: passwordField.text!)
-        
-        if case .success = status{
-            let vc = createTabBarViewController()
-            self.navigationController?.setViewControllers([vc], animated: true)
-        }
+        loginPresenter.verifyLogin(viewCont: self, username: emailField.text!, password: passwordField.text!)
     }
     
     
@@ -183,5 +175,6 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
         layerGradient.frame = view.bounds
     }
     
+   
 }
 

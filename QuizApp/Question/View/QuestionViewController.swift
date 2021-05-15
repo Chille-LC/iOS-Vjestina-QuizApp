@@ -9,7 +9,9 @@ import Foundation
 import UIKit
 import SnapKit
 
-class QuizViewController:UIViewController{
+class QuestionViewController:UIViewController{
+    
+    private var questionPresenter: QuestionPresenter!
     
     private var questionLabel:UILabel!
     private var button1:UIButton!
@@ -23,19 +25,14 @@ class QuizViewController:UIViewController{
     
     private var progressArray: [UIView] = []
     private var questionNoText: String!
-    private var questionText: String!
-    private var answers: [String]!
-    private var correctAnswer: String!
     private var numOfQuestions = 0
     private var indexProgress = 0
     
-    init(answerList: [String], quesText: String, questNoText: String, correctAnswerIndex: Int, numberOfQuestions: Int) {
+    init(question: Question, questNoText: String, numberOfQuestions: Int) {
+        questionPresenter = QuestionPresenter(questionPassed: question)
         
         self.numOfQuestions = numberOfQuestions
-        self.answers = answerList
-        self.questionText = quesText
         self.questionNoText = questNoText
-        self.correctAnswer = answerList[correctAnswerIndex]
         super.init(nibName: nil, bundle: nil)
         
         questionTrackerView = UIView()
@@ -65,8 +62,8 @@ class QuizViewController:UIViewController{
         
         layerGradient = CAGradientLayer()
         layerGradient.frame = view.bounds
-        layerGradient.colors = [UIColor(red: 0.45, green: 0.31, blue: 0.64, alpha: 1).cgColor,
-                                UIColor(red: 0.15, green: 0.18, blue: 0.46, alpha: 1).cgColor]
+        layerGradient.colors = [Colors.purple1.cgColor,
+                                Colors.darkBlue.cgColor]
         
         appName = UILabel()
         appName.textColor = .white
@@ -84,7 +81,7 @@ class QuizViewController:UIViewController{
         
         questionLabel = UILabel()
         questionLabel.textColor = .white
-        questionLabel.text = questionText
+        questionLabel.text = questionPresenter.getQuestionText()
         questionLabel.numberOfLines = 0
         questionLabel.font = UIFont(name: "SourceSansPro-Black", size: 25)
         questionLabel.textAlignment = .left
@@ -126,10 +123,10 @@ class QuizViewController:UIViewController{
         button4.contentEdgeInsets.top = 5
         button4.contentEdgeInsets.bottom = 5
         
-        button1.setTitle(answers[0], for: .normal)
-        button2.setTitle(answers[1], for: .normal)
-        button3.setTitle(answers[2], for: .normal)
-        button4.setTitle(answers[3], for: .normal)
+        button1.setTitle(questionPresenter.getAnswer(index: 0), for: .normal)
+        button2.setTitle(questionPresenter.getAnswer(index: 1), for: .normal)
+        button3.setTitle(questionPresenter.getAnswer(index: 2), for: .normal)
+        button4.setTitle(questionPresenter.getAnswer(index: 3), for: .normal)
         
         progressArray[indexProgress].backgroundColor = .white
 
@@ -193,20 +190,20 @@ class QuizViewController:UIViewController{
         questionTrackerView.snp.makeConstraints{make -> Void in
             make.centerX.equalToSuperview()
             make.height.equalTo(10)
-            make.width.equalToSuperview().multipliedBy(0.8)
+            make.width.equalToSuperview().multipliedBy(0.9)
             make.bottom.equalTo(questionNoLabel.snp.top).offset(10)
         }
         
         progressArray[0].snp.makeConstraints{ make -> Void in
             make.height.equalToSuperview()
-            make.left.equalToSuperview().offset(4)
-            make.width.equalToSuperview().dividedBy(Double(progressArray.count)+0.5)
+            make.left.equalToSuperview()
+            make.width.equalToSuperview().dividedBy(progressArray.count).offset(-4.5)
         }
         
         for index in 1...(numOfQuestions-1){
             progressArray[index].snp.makeConstraints{make -> Void in
                 make.left.equalTo(progressArray[index - 1].snp.right).offset(5)
-                make.width.equalToSuperview().dividedBy(Double(progressArray.count)+0.5)
+                make.width.equalToSuperview().dividedBy(progressArray.count).offset(-4.5)
                 make.height.equalToSuperview()
             }
         }
@@ -219,22 +216,7 @@ class QuizViewController:UIViewController{
     }
     
     @objc func answerPressed(sender: UIButton){
-        let parentViewCont = self.parent as! QuizPageViewController
-        
-        if (sender.currentTitle == correctAnswer) {
-            sender.backgroundColor = .green
-            parentViewCont.goToNextPage(correct: true, index: indexProgress )
-
-        }
-        else{
-            for button in [button4, button3, button2, button1] {
-                if (button?.currentTitle == correctAnswer){
-                    button?.backgroundColor = .green
-                }
-            }
-            sender.backgroundColor = .red
-            parentViewCont.goToNextPage(correct: false, index: indexProgress)
-        }
+        questionPresenter.checkAnswer(sender: sender, buttons: [button1, button2, button3, button4], view: self, indexProgress: indexProgress)
     }
     
     func setProgress(index: Int){

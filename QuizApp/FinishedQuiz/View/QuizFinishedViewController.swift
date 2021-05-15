@@ -15,6 +15,7 @@ class QuizFinishedViewController: UIViewController {
     private var finishButton: RoundButton!
     private var layerGradient: CAGradientLayer!
     private var scoreText = ""
+    private var quizFinishedPresenter = QuizFinishedPresenter()
     
     init(text: String) {
         scoreText = text
@@ -26,6 +27,7 @@ class QuizFinishedViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        quizFinishedPresenter.sendResults(viewCont: self)
         super.viewDidLoad()
         buildViews()
         addConstraints()
@@ -37,8 +39,8 @@ class QuizFinishedViewController: UIViewController {
     private func buildViews(){
         layerGradient = CAGradientLayer()
         layerGradient.frame = view.bounds
-        layerGradient.colors = [UIColor(red: 0.45, green: 0.31, blue: 0.64, alpha: 1).cgColor,
-                                UIColor(red: 0.15, green: 0.18, blue: 0.46, alpha: 1).cgColor]
+        layerGradient.colors = [Colors.purple1.cgColor,
+                                Colors.darkBlue.cgColor]
         
         score = UILabel()
         score.textColor = .white
