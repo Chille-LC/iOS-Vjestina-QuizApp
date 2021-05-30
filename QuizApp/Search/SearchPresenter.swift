@@ -1,21 +1,18 @@
 //
-//  QuizzesPresenter.swift
+//  SearchPresenter.swift
 //  QuizApp
 //
-//  Created by Luka Cicak on 14.05.2021..
+//  Created by Luka Cicak on 30.05.2021..
 //
 
 import Foundation
 import UIKit
-import CoreData
 
-
-class QuizzesPresenter {
+class SearchPresenter {
     
     var delegate: QuizzesPresenterDelegate?
     private var quizzes: [[Quiz]]!
     private var quizzesUnsectioned: [Quiz]!
-    private var noOfNBA = ""
     private var quizRepository: QuizRepository!
     
     init() {
@@ -31,7 +28,6 @@ class QuizzesPresenter {
     
     func sectionQuizzes(quizzes: [Quiz]) -> [[Quiz]] {
         quizzesUnsectioned = quizzes
-        self.noOfNBA = configureFunFact()
         var sectionedQuizzes: [[Quiz]] = []
         let dict = Dictionary(grouping: quizzes, by: { $0.category })
         
@@ -48,22 +44,14 @@ class QuizzesPresenter {
         return quizzes
     }
     
-    func getFact() -> String {
-        return noOfNBA
-    }
-    
     func setQuizzes(quizArray: [Quiz]){
         self.quizzes = sectionQuizzes(quizzes: quizArray)
     }
     
-    func fetchQuizzes(){
-        quizRepository.fetchQuizzes(presenter: self)
+    func fetchQuizzes(text: String){
+        quizRepository.fetchQuizzesForSearch(presenter: self, filter: FilterSettings(searchText: text))
     }
     
-    func configureFunFact() -> String {
-        let noOfNBA = quizzesUnsectioned.flatMap({$0.questions}).filter({$0.question.contains("NBA")}).count
-        return "There are" + " \(noOfNBA) " + "questions that contain the word \"NBA\" "
-    }
     
     func getHeaderText(section: Int) -> String{
         guard let header = quizzes[section].first?.category.rawValue.lowercased().capitalized
@@ -97,5 +85,4 @@ class QuizzesPresenter {
         newQuizPageController.setControllers(controllerArray: controllers)
         return newQuizPageController
     }
-    
 }

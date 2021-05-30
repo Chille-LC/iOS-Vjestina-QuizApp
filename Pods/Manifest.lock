@@ -1,20 +1,24 @@
 PODS:
+  - Reachability (3.2)
   - SnapKit (5.0.1)
   - SwiftLint (0.43.1)
 
 DEPENDENCIES:
-  - SnapKit
+  - Reachability (~> 3.2)
+  - SnapKit (~> 5.0)
   - SwiftLint
 
 SPEC REPOS:
   trunk:
+    - Reachability
     - SnapKit
     - SwiftLint
 
 SPEC CHECKSUMS:
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   SwiftLint: 99f82d07b837b942dd563c668de129a03fc3fb52
 
-PODFILE CHECKSUM: e5af9d20dba2faeeefe67af3a34b5b2bea390a2d
+PODFILE CHECKSUM: da653c19bbc3ae7993660752e970a590814e89bd
 
 COCOAPODS: 1.10.1
