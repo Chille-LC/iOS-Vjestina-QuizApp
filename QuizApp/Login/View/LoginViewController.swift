@@ -17,11 +17,76 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
     private var loginButton: RoundButton!
     private var layerGradient: CAGradientLayer!
     private var loginStatus: LoginStatus!
-    private var loginPresenter = LoginPresenter()
+    private var loginPresenter: LoginPresenter!
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        
+        self.loginPresenter = LoginPresenter()
+        self.loginPresenter.delegate = self
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        emailField.transform = emailField.transform.translatedBy(x: -view.frame.width, y: 0)
+        emailField.alpha = 0
+        
+        passwordField.transform = passwordField.transform.translatedBy(x: -view.frame.width, y: 0)
+        passwordField.alpha = 0
+        
+        loginButton.transform = loginButton.transform.translatedBy(x: -view.frame.width, y: 0)
+        loginButton.alpha = 0
+        
+        appName.transform = appName.transform.scaledBy(x: 0, y: 0)
+        appName.alpha = 0
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        UIView.animate(
+            withDuration: 1,
+            delay: 0,
+            options: .curveEaseOut,
+            animations: {
+                self.appName.alpha = 1
+                self.appName.transform = .identity
+            })
+        
+        UIView.animate(
+            withDuration: 1,
+            delay: 0,
+            options: .curveEaseOut,
+            animations: {
+                self.emailField.alpha = 1
+                self.emailField.transform = .identity
+            })
+        
+        UIView.animate(
+            withDuration: 1,
+            delay: 0.25,
+            options: .curveEaseOut,
+            animations: {
+                self.passwordField.alpha = 1
+                self.passwordField.transform = .identity
+            })
+        
+        UIView.animate(
+            withDuration: 1,
+            delay: 0.5,
+            options: .curveEaseOut,
+            animations: {
+                self.loginButton.alpha = 1
+                self.loginButton.transform = .identity
+            })
+    }
     
     override func viewDidLoad() {
-        
-        
         super.viewDidLoad()
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
@@ -176,5 +241,52 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
     }
     
    
+    func transitionTransform(){
+        
+        UIView.animate(
+            withDuration: 1,
+            delay: 0,
+            options: .curveEaseOut,
+            animations: {
+                self.appName.transform = self.appName.transform.translatedBy(x: 0, y: -self.view.frame.height)
+            })
+        
+        UIView.animate(
+            withDuration: 1,
+            delay: 0.25,
+            options: .curveEaseOut,
+            animations: {
+                self.emailField.transform = self.emailField.transform.translatedBy(x: 0, y: -self.view.frame.height)
+            })
+        
+        UIView.animate(
+            withDuration: 1,
+            delay: 0.5,
+            options: .curveEaseOut,
+            animations: {
+                self.passwordField.transform = self.passwordField.transform.translatedBy(x: 0, y: -self.view.frame.height)
+            })
+        
+        UIView.animate(
+            withDuration: 1,
+            delay: 0.75,
+            options: .curveEaseOut,
+            animations: {
+                self.loginButton.transform = self.loginButton.transform.translatedBy(x: 0, y: -self.view.frame.height)
+            },
+            completion: { _ in
+                let vc = createTabBarViewController()
+                self.navigationController?.setViewControllers([vc], animated: true)
+            })
+    }
 }
+
+extension LoginViewController: LoginPresenterDelegate {
+    
+    func loginSucces() {
+        transitionTransform()
+    }
+}
+
+
 

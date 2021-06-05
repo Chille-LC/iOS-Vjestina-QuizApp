@@ -58,11 +58,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 
-
-class DummyViewController2:UIViewController{
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .blue
-    }
-}

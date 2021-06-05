@@ -11,6 +11,7 @@ import UIKit
 class LoginPresenter {
     
     private var userDefaults: UserDefaults!
+    var delegate: LoginPresenterDelegate?
     
     func showAlert(viewCont: LoginViewController) {
         let alertController = UIAlertController(title: "Error", message:
@@ -18,6 +19,10 @@ class LoginPresenter {
         alertController.addAction(UIAlertAction(title: "Dismiss", style: .default))
 
         viewCont.present(alertController, animated: true, completion: nil)
+    }
+    
+    func showSuccess(){
+        self.delegate?.loginSucces()
     }
     
     func verifyLogin(viewCont: LoginViewController, username: String, password: String) {
@@ -31,7 +36,6 @@ class LoginPresenter {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         networkService.executeUrlRequest(request) { (result: Result<LoginResponse, RequestError>) in
-            print("Usao")
             switch result {
                 case .failure(let error):
                     print(error)
@@ -42,10 +46,8 @@ class LoginPresenter {
                     UserDefaults.standard.setValue(value.token, forKey: "token")
                     UserDefaults.standard.setValue(value.id, forKey: "user_id")
                     DispatchQueue.main.async {
-                        let vc = createTabBarViewController()
-                        viewCont.navigationController?.setViewControllers([vc], animated: true)
+                        self.showSuccess()
                     }
-                    
             }
         }
     }

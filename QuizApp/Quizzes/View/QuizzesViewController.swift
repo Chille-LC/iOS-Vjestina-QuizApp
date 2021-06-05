@@ -16,30 +16,33 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
     private var layerGradient: CAGradientLayer!
     private var appName: UILabel!
     private var funFact: UILabel!
-    private var getButton: RoundButton!
-    
-    private var errorScreen: UIView!
-    private var labelError: UILabel!
-    private var labelMessage: UILabel!
-    private var errorImage: UIImageView!
     
     private var funScreen: UIView!
     private var labelFunFact: UILabel!
     private var labelFact: UILabel!
     
-    private var quizzesPresenter =  QuizzesPresenter()
-    private var QuizTableView = UITableView()
+    private var quizzesPresenter: QuizzesPresenter
+    private var quizTableView = UITableView()
 
 
     struct Cells {
         static let cellID = "quizCell"
     }
    
+    init() {
+        self.quizzesPresenter = QuizzesPresenter()
+        super.init(nibName: nil, bundle: nil)
+        quizzesPresenter.delegate = self
+        quizzesPresenter.fetchQuizzes()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
 
         super.viewDidLoad()
-        quizzesPresenter.fetchQuizzes(viewController: self)
         buildViews()
         addConstraints()
         
@@ -47,9 +50,7 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
-       
-        getButton.addTarget(self, action: #selector(getButtonIsPressed), for: .touchUpInside)
-        
+               
     }
     
     private func buildViews(){
@@ -65,35 +66,6 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         appName.font = UIFont(name: "SourceSansPro-Black", size: 38)
         appName.textAlignment = .center
         appName.adjustsFontSizeToFitWidth = true
-        
-        getButton = RoundButton()
-        getButton.setTitle("Get Quiz", for: .normal)
-        getButton.backgroundColor = .white
-        getButton.clipsToBounds = true
-        getButton.titleLabel?.font = UIFont(name: "SourceSansPro-Black", size: 20)
-        getButton.setTitleColor(Colors.purple2, for: .normal)
-        
-        errorScreen = UIView()
-        
-        labelError = UILabel()
-        labelError.text = "Error"
-        labelError.font = UIFont(name: "SourceSansPro-Black", size: 35)
-        labelError.textColor = .white
-        labelError.textAlignment = .center
-        
-        labelMessage = UILabel()
-        labelMessage.text = "Data can’t be reached. Please try again"
-        labelMessage.textColor = .white
-        labelMessage.font = UIFont(name: "SourceSansPro-Light", size: 18)
-        labelMessage.numberOfLines = 2
-        labelMessage.textAlignment = .center
-        labelMessage.adjustsFontSizeToFitWidth = true
-        
-        errorImage = UIImageView(image: UIImage(systemName: "xmark.circle")?.withTintColor(.white, renderingMode: .alwaysOriginal))
-        
-        errorScreen.addSubview(labelMessage)
-        errorScreen.addSubview(labelError)
-        errorScreen.addSubview(errorImage)
         
         funScreen = UIView()
         
@@ -112,12 +84,9 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         funScreen.addSubview(labelFunFact)
         funScreen.addSubview(labelFact)
-        funScreen.isHidden = true
                         
         view.layer.insertSublayer(layerGradient, at: 0)
         view.addSubview(appName)
-        view.addSubview(getButton)
-        view.addSubview(errorScreen)
         view.addSubview(funScreen)
         
     }
@@ -131,41 +100,9 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
         }
         
-        getButton.snp.makeConstraints{make -> Void in
-            make.top.equalTo(appName.snp.bottom).offset(30)
-            make.width.equalTo(appName).multipliedBy(1.72)
-            make.height.equalTo(appName).multipliedBy(0.95)
-            make.centerX.equalToSuperview()
-        }
-        
-        errorScreen.snp.makeConstraints{make -> Void in
-            make.center.equalToSuperview()
-            make.height.equalToSuperview().multipliedBy(0.25)
-            make.width.equalToSuperview().multipliedBy(0.5)
-        }
-        
-        labelError.snp.makeConstraints{make -> Void in
-            make.center.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.8)
-            make.height.equalToSuperview().multipliedBy(0.15)
-        }
-        
-        labelMessage.snp.makeConstraints{make -> Void in
-            make.top.equalTo(labelError.snp.bottom).offset(10)
-            make.height.equalToSuperview().multipliedBy(0.25)
-            make.width.equalToSuperview()
-        }
-        
-        errorImage.snp.makeConstraints{make -> Void in
-            make.bottom.equalTo(labelError.snp.top).offset(-10)
-            make.height.equalToSuperview().multipliedBy(0.4)
-            make.width.equalTo(errorImage.snp.height)
-            make.centerX.equalToSuperview()
-        }
-        
         funScreen.snp.makeConstraints{make -> Void in
-            make.top.equalTo(getButton.snp.bottom).offset(20)
-            make.height.equalTo(getButton).multipliedBy(2)
+            make.top.equalTo(appName.snp.bottom).offset(20)
+            make.height.equalTo(appName).multipliedBy(1.9)
             make.width.equalToSuperview()
             make.centerX.equalToSuperview()
         }
@@ -188,17 +125,16 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func configurTableView(){
         
-        QuizTableView.isHidden = true
-        view.addSubview(QuizTableView)
+        view.addSubview(quizTableView)
         
-        QuizTableView.delegate = self
-        QuizTableView.dataSource = self
-        QuizTableView.rowHeight = view.frame.height / 5.5
-        QuizTableView.backgroundColor = .none
-        QuizTableView.translatesAutoresizingMaskIntoConstraints = false
-        QuizTableView.register(QuizCell.self, forCellReuseIdentifier: Cells.cellID)
+        quizTableView.delegate = self
+        quizTableView.dataSource = self
+        quizTableView.rowHeight = view.frame.height / 5.5
+        quizTableView.backgroundColor = .none
+        quizTableView.translatesAutoresizingMaskIntoConstraints = false
+        quizTableView.register(QuizCell.self, forCellReuseIdentifier: Cells.cellID)
         
-        QuizTableView.snp.makeConstraints{make -> Void in
+        quizTableView.snp.makeConstraints{make -> Void in
             make.bottom.equalToSuperview().offset(10)
             make.right.left.equalToSuperview()
             make.top.equalTo(funScreen.snp.bottom)
@@ -219,8 +155,8 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let selectedIndexPath = QuizTableView.indexPathForSelectedRow {
-            QuizTableView.deselectRow(at: selectedIndexPath, animated: animated)
+        if let selectedIndexPath = quizTableView.indexPathForSelectedRow {
+            quizTableView.deselectRow(at: selectedIndexPath, animated: animated)
         }
     }
     
@@ -253,21 +189,20 @@ class QuizzesViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.navigationController?.pushViewController(newQuizPage, animated: true)
     }
     
-    @objc func getButtonIsPressed(){
-        QuizTableView.reloadData()
-        errorScreen.isHidden = true
-        funScreen.isHidden = false
-        QuizTableView.isHidden = false
-        
-        labelFact.text = quizzesPresenter.getFact()
-        
-    }
+
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         layerGradient.frame = view.bounds
     }
     
+}
+
+extension QuizzesViewController: QuizzesPresenterDelegate {
+    func showSuccessPopup() {
+        configurTableView()
+        labelFact.text = quizzesPresenter.getFact()
+    }
 }
 
 

@@ -27,7 +27,7 @@ func createTabBarViewController() -> UIViewController {
                                  selectedImage: quizImage)
     
     
-    let dm1 = DummyViewController2()
+    let dm1 = SearchController()
     dm1.tabBarItem = UITabBarItem(title: "Search",
                                   image: search,
                                   selectedImage: search)
