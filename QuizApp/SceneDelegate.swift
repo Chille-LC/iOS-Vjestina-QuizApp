@@ -17,53 +17,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene
         else {return}
         
-        /*window = UIWindow(windowScene: windowScene)
-        let vc = LoginViewController()
-        window!.rootViewController = vc
-        window?.makeKeyAndVisible()*/
-        
-        startTabBarController(in: windowScene)
-    }
-    
-    private func startTabBarController(in windowScene: UIWindowScene) {
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = createTabBarViewController()
+        let vc = LoginViewController()
+        let navigationController = UINavigationController(rootViewController: vc)
+        window!.rootViewController = navigationController
         window?.makeKeyAndVisible()
+        
     }
     
-    
-    private func createTabBarViewController() -> UIViewController {
-        let vc = UITabBarController()
-        
-        vc.tabBar.tintColor = .purple
-        vc.tabBar.barTintColor = .white
-        
-        let quizImage = UIImage(systemName: "stopwatch")!
-        
-        let search = UIImage(systemName: "magnifyingglass")
-        
-        let gear = UIImage(systemName: "gearshape.fill")
-        
-        let mn = QuizzesViewController()
-        mn.tabBarItem = UITabBarItem(title: "Quiz",
-                                     image: quizImage,
-                                     selectedImage: quizImage)
-        
-        
-        let dm1 = DummyViewController2()
-        dm1.tabBarItem = UITabBarItem(title: "Search",
-                                      image: search,
-                                      selectedImage: search)
-        
-        let dm2 = DummyViewController1()
-        dm2.tabBarItem = UITabBarItem(title: "Settings",
-                                      image: gear,
-                                      selectedImage: gear)
-        
-        vc.viewControllers = [mn, dm1, dm2]
-        
-        return vc
-    }
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
@@ -97,13 +58,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 
-class DummyViewController1:UIViewController{
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .purple
-    }
-}
 
 class DummyViewController2:UIViewController{
     
