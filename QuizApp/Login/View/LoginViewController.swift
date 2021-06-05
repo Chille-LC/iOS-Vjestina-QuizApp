@@ -201,7 +201,6 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
     
     
     @objc func loginButtonPressed(){
-        transitionTransform()
         loginPresenter.verifyLogin(viewCont: self, username: emailField.text!, password: passwordField.text!)
     }
     
@@ -274,6 +273,10 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
             options: .curveEaseOut,
             animations: {
                 self.loginButton.transform = self.loginButton.transform.translatedBy(x: 0, y: -self.view.frame.height)
+            },
+            completion: { _ in
+                let vc = createTabBarViewController()
+                self.navigationController?.setViewControllers([vc], animated: true)
             })
     }
 }
@@ -281,8 +284,7 @@ class LoginViewController:UIViewController, UITextFieldDelegate{
 extension LoginViewController: LoginPresenterDelegate {
     
     func loginSucces() {
-        let vc = createTabBarViewController()
-        self.navigationController?.setViewControllers([vc], animated: true)
+        transitionTransform()
     }
 }
 
