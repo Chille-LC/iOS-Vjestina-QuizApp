@@ -39,6 +39,7 @@
 		1B8621672662921A00628D7B /* QuizNetworkDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8621662662921A00628D7B /* QuizNetworkDataSource.swift */; };
 		1B86216A2662968800628D7B /* Question+CD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8621692662968800628D7B /* Question+CD.swift */; };
 		1B86216C2662969400628D7B /* Quiz+CD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B86216B2662969400628D7B /* Quiz+CD.swift */; };
+		1B875718266A8319007A2FC0 /* LoginPresenterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B875717266A8319007A2FC0 /* LoginPresenterDelegate.swift */; };
 		1B9815EA266298C1007DC579 /* QuizAppCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1B9815E8266298C1007DC579 /* QuizAppCoreData.xcdatamodeld */; };
 		1BBA3B4A263EB8E8006F0459 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBA3B49263EB8E8006F0459 /* TabBarController.swift */; };
 		1BBA3B4C263EBEBB006F0459 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBA3B4B263EBEBB006F0459 /* SettingsViewController.swift */; };
@@ -100,9 +101,11 @@
 		1B8621662662921A00628D7B /* QuizNetworkDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizNetworkDataSource.swift; sourceTree = "<group>"; };
 		1B8621692662968800628D7B /* Question+CD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Question+CD.swift"; sourceTree = "<group>"; };
 		1B86216B2662969400628D7B /* Quiz+CD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Quiz+CD.swift"; sourceTree = "<group>"; };
+		1B875717266A8319007A2FC0 /* LoginPresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenterDelegate.swift; sourceTree = "<group>"; };
 		1B9815E9266298C1007DC579 /* QuizAppCoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QuizAppCoreData.xcdatamodel; sourceTree = "<group>"; };
 		1BBA3B49263EB8E8006F0459 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		1BBA3B4B263EBEBB006F0459 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		1BBCE6D32668ECA000B44BAA /* QuizAppCoreData 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "QuizAppCoreData 2.xcdatamodel"; sourceTree = "<group>"; };
 		1BC272B1264D920E002CA8AF /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
 		1BDDDD90264EE0E0005E7A45 /* QuestionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionPresenter.swift; sourceTree = "<group>"; };
 		1BDDDD92264EE0E0005E7A45 /* QuizPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuizPageViewController.swift; sourceTree = "<group>"; };
@@ -223,6 +226,7 @@
 			isa = PBXGroup;
 			children = (
 				1B5D60D4264FF0DE00705285 /* LoginPresenter.swift */,
+				1B875717266A8319007A2FC0 /* LoginPresenterDelegate.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -612,6 +616,7 @@
 				1B2EF21B26643A80008F84D0 /* CDQuiz+CoreDataProperties.swift in Sources */,
 				1B8621542662906400628D7B /* QuizRepository.swift in Sources */,
 				1B5D60DC2650396F00705285 /* ResultsResponse.swift in Sources */,
+				1B875718266A8319007A2FC0 /* LoginPresenterDelegate.swift in Sources */,
 				1BEBB8662625CDBC0040BD9D /* Quiz.swift in Sources */,
 				1BF9A6C2264AE3A500156E5E /* RequestError.swift in Sources */,
 				1B6FCCDD264954EE00D67E80 /* DataMaps.swift in Sources */,
@@ -820,9 +825,10 @@
 		1B9815E8266298C1007DC579 /* QuizAppCoreData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1BBCE6D32668ECA000B44BAA /* QuizAppCoreData 2.xcdatamodel */,
 				1B9815E9266298C1007DC579 /* QuizAppCoreData.xcdatamodel */,
 			);
-			currentVersion = 1B9815E9266298C1007DC579 /* QuizAppCoreData.xcdatamodel */;
+			currentVersion = 1BBCE6D32668ECA000B44BAA /* QuizAppCoreData 2.xcdatamodel */;
 			path = QuizAppCoreData.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

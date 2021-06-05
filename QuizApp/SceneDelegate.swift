@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         else {return}
         
         window = UIWindow(windowScene: windowScene)
-        let vc = createTabBarViewController()
+        let vc = LoginViewController()
         let navigationController = UINavigationController(rootViewController: vc)
         window!.rootViewController = navigationController
         window?.makeKeyAndVisible()
@@ -58,11 +58,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 
-
-class DummyViewController2:UIViewController{
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .blue
-    }
-}
