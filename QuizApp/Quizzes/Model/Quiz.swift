@@ -1,3 +1,6 @@
+import CoreData
+import UIKit
+
 struct Quiz:Codable {
 
     let id: Int

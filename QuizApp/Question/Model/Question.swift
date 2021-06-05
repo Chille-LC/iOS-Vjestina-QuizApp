@@ -1,3 +1,5 @@
+import UIKit
+
 struct Question:Codable {
 
     let id: Int
@@ -11,4 +13,5 @@ struct Question:Codable {
         case answers
         case correctAnswer = "correct_answer"
     }
+    
 }

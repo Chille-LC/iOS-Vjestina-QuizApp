@@ -59,9 +59,6 @@ extension QuizPageViewController: UIPageViewControllerDataSource{
         return controllers[displayedIndex]
     }
     
-    func nextQuestion(){
-        
-    }
     func goToNextPage(animated: Bool = true, completion: ((Bool) -> Void)? = nil, correct: Bool, index: Int) {
         
         if correct {
